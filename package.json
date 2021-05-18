@@ -1,0 +1,26 @@
+{
+  "name": "electron-streamer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "streamer-main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "argparse": "^2.0.1",
+    "cesium": "^1.81.0",
+    "electron": "^12.0.7",
+    "electron-builder": "^22.10.5",
+    "electron-packager": "^15.2.0",
+    "electron-prebuilt": "^1.4.13"
+  },
+  "dependencies": {
+    "cesium": "^1.81.0",
+    "electron-packager": "^15.2.0",
+    "performance-now": "^2.1.0",
+    "prompt-sync": "^4.2.0",
+    "yargs": "^16.2.0"
+  }
+}
