@@ -1,6 +1,8 @@
 const spawn = require('child_process').spawn
 const ffmpeg_path = "ffmpeg/bin/ffmpeg.exe"
 
+// TODO: catch ffmpeg not found error
+
 class FfmpegStreamer
 {
     appendFrame(image)

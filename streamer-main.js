@@ -19,7 +19,6 @@ const OffscreenBrowser = require("./stream/offscreen-browser")
 const app = require("electron").app
 
 let ffmpeg_params = {
-    path: 'ffmpeg.exe',
     resolution: { width: 1024, height: 768 },
     codec: 'h264',
     protocol: 'udp',
@@ -36,11 +35,11 @@ app.whenReady().then(() =>
     ffmpeg.start(ffmpeg_params)
 })
 
-setInterval(()=>
+/*setInterval(()=>
 {
     ffmpeg.stop()
     ffmpeg.start(ffmpeg_params)
-}, 10000)
+}, 10000)*/
 
 
 //--src C:\dev\repos\cesium-electron-sandbox\pages\cesium-plain\plain.html
