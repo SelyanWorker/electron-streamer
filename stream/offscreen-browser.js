@@ -12,8 +12,8 @@ class OffscreenBrowser
         this.#window = new BrowserWindow(
         {
             useContentSize: true,
-            show: false,
-            frame: false,
+            /*show: false,
+            frame: false,*/
             webPreferences:
             {
                 offscreen: true
@@ -50,16 +50,16 @@ class OffscreenBrowser
         if (!url)
             this.#window.loadURL(stub_page)
         else
-            this.#window.loadURL(url).then(null, ()=>
+            this.#window.loadURL(url).then(null, () =>
             {
-                console.log(url, 'not found, loading stub page')
-                this.#window.loadURL(stub_page)
+                /*console.log(url, 'not found, loading stub page')
+                this.#window.loadURL(stub_page)*/
             })
     }
 
-    resize(width, height)
+    resize({ width, height })
     {
-        if (isNaN(width) && isNaN(height))
+        if (Number.isInteger(width) && Number.isInteger(height))
             this.#window.setSize(width, height)
     }
 
