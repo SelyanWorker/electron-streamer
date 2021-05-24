@@ -16,7 +16,7 @@ class OffscreenBrowser
             frame: false,*/
             webPreferences:
             {
-                offscreen: true
+                //offscreen: true
             }
         });
 
@@ -52,8 +52,8 @@ class OffscreenBrowser
         else
             this.#window.loadURL(url).then(null, () =>
             {
-                /*console.log(url, 'not found, loading stub page')
-                this.#window.loadURL(stub_page)*/
+                console.log(url, 'not found, loading stub page')
+                this.#window.loadURL(stub_page)
             })
     }
 
