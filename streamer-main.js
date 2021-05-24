@@ -18,7 +18,7 @@ let browser
 const OffscreenBrowser = require("./stream/offscreen-browser")
 const app = require("electron").app
 
-let resolution = { width: 1920, height: 1080 }
+let resolution = { width: 1280, height: 768 }
 let ffmpeg_params =
 {
     mode: 'raw',
@@ -49,7 +49,7 @@ app.whenReady().then(() =>
         fs.writeFileSync('ex.raw', image.getBitmap())*/
     })
     browser.resize(resolution)
-    browser.loadUrl("D:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
+    browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
 
     //browser.loadUrl()
 
@@ -58,12 +58,12 @@ app.whenReady().then(() =>
 })
 
 
-setTimeout(()=>
+/*setTimeout(()=>
 {
     ffmpeg.stop()
     browser.close()
     console.log("Test passed!!!")
-}, 1000000)
+}, 1000000)*/
 
 /*setInterval(()=>
 {

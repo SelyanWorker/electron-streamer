@@ -11,12 +11,12 @@ class OffscreenBrowser
 
         this.#window = new BrowserWindow(
         {
-            useContentSize: true,
+            //useContentSize: true,
             /*show: false,
             frame: false,*/
             webPreferences:
             {
-                //offscreen: true
+                offscreen: true
             }
         });
 
@@ -42,7 +42,7 @@ class OffscreenBrowser
             this.#onPaintCallback(image)
         });
 
-        this.#window.webContents.setFrameRate(60)
+        this.#window.webContents.setFrameRate(30)
     }
 
     loadUrl(url)
