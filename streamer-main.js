@@ -39,7 +39,7 @@ app.whenReady().then(() =>
     })
     browser.resize(resolution)
     //browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-simple/simple.html")
-    browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
+    browser.loadUrl("file:///" + "C:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
     //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginVideoPage()")
     //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginMapPage()")
 

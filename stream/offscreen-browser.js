@@ -1,7 +1,7 @@
 const BrowserWindow = require("electron").BrowserWindow
 const performanceNow = require("performance-now")
 
-const stub_page = __dirname + '\\stub-page\\stub.html'
+const stub_page = "file:///" + __dirname + '/stub-page/stub.html'
 
 class OffscreenBrowser
 {
