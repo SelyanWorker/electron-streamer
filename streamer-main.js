@@ -14,11 +14,10 @@ const FfmpegStreamer = require("./stream/ffmpeg")
 
 let ffmpeg = new FfmpegStreamer
 
-let browser
 const OffscreenBrowser = require("./stream/offscreen-browser")
 const app = require("electron").app
 
-let resolution = { width: 1280, height: 768 }
+let resolution = { width: 1920, height: 1080 }
 let ffmpeg_params =
 {
     mode: 'raw',
@@ -26,20 +25,10 @@ let ffmpeg_params =
     codec: 'h264',
     protocol: 'udp',
     url: '127.0.0.1',
-    port: 23000
+    port: 10004
 }
 
-
-app.on( 'child-process-gone', (event, details)=>
-{
-    console.log(details.type, details.reason, details.exitCode)
-})
-
-app.on('render-process-gone', (event, webContents, details)=>
-{
-    console.log(details.reason, webContents ,details.exitCode)
-})
-
+let browser
 app.whenReady().then(() =>
 {
     browser = new OffscreenBrowser((image) => {
@@ -49,12 +38,14 @@ app.whenReady().then(() =>
         fs.writeFileSync('ex.raw', image.getBitmap())*/
     })
     browser.resize(resolution)
+    //browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-simple/simple.html")
     browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
+    //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginVideoPage()")
+    //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginMapPage()")
 
     //browser.loadUrl()
 
     ffmpeg.start(ffmpeg_params)
-
 })
 
 

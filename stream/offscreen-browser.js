@@ -11,9 +11,7 @@ class OffscreenBrowser
 
         this.#window = new BrowserWindow(
         {
-            //useContentSize: true,
-            /*show: false,
-            frame: false,*/
+            useContentSize: true, // doesn't work
             webPreferences:
             {
                 offscreen: true
@@ -39,10 +37,20 @@ class OffscreenBrowser
                 console.log(fps);
             }
 
-            this.#onPaintCallback(image)
+            /*console.log('Image size: ', image.getSize().width, image.getSize().height, image.getScaleFactors(),
+                        'Dirty size: ', dirty.width, dirty.height,
+                        'Content size: ', this.#window.getContentBounds().width, this.#window.getContentBounds().height)
+            console.log('Windows size: ', this.#window.getSize()[0], this.#window.getSize()[1])*/
+
+            let resizeParams = {
+                width: this.#window.getSize()[0],
+                height: this.#window.getSize()[1],
+                quality: 'best'
+            }
+            this.#onPaintCallback(image.resize(resizeParams))
         });
 
-        this.#window.webContents.setFrameRate(30)
+        this.#window.webContents.setFrameRate(60)
     }
 
     loadUrl(url)
