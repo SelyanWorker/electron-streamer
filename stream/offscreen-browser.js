@@ -47,10 +47,11 @@ class OffscreenBrowser
                 height: this.#window.getSize()[1],
                 quality: 'best'
             }
-            this.#onPaintCallback(image.resize(resizeParams))
+            //this.#onPaintCallback(image.resize(resizeParams))
+            this.#onPaintCallback(image)
         });
 
-        this.#window.webContents.setFrameRate(60)
+        this.#window.webContents.setFrameRate(30)
     }
 
     loadUrl(url)
@@ -67,8 +68,14 @@ class OffscreenBrowser
 
     resize({ width, height })
     {
+        const magicNumber = 1.25;
         if (Number.isInteger(width) && Number.isInteger(height))
-            this.#window.setSize(width, height)
+        {
+            let correctWidth = width / magicNumber
+            let correctHeight = height / magicNumber
+            this.#window.setSize(correctWidth, correctHeight)
+            //this.#window.setSize(width, height)
+        }
     }
 
     close()
