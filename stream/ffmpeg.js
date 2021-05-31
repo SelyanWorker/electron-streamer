@@ -1,5 +1,5 @@
 const spawn = require('child_process').spawn
-const ffmpeg_path = /*"ffmpeg/bin/ffmpeg.exe"*/ 'C:/dev/tools/ffmpeg-4.4-full_build/bin/ffmpeg.exe'
+const ffmpeg_path_default = 'ffmpeg'
 
 // TODO: catch ffmpeg not found error
 
@@ -7,38 +7,60 @@ class FfmpegStreamer
 {
     appendFrame(image)
     {
-        if (this.#ffmpegSpawn &&
-            !this.#ffmpegSpawn.killed)
+        if (this.#isAlive())
         {
             this.#ffmpegSpawn.stdin.write(image)
+            return
         }
+        console.log("FFmpeg is not alive")
     }
 
     start(params)
     {
-        if (!this.#ffmpegSpawn ||
-            this.#ffmpegSpawn.killed)
+        if (!this.#isAlive())
         {
             let args = this.#getFfmpegArgvCPU(params)
             //let args = this.#getFfmpegArgvGPU_Intel(params)
-            let path = ffmpeg_path
+            let path = params.ffmpeg_path ? params.ffmpeg_path : ffmpeg_path_default
 
             console.log(path)
             console.log(args)
 
             this.#ffmpegSpawn = spawn(path, args)
 
+            this.#ffmpegSpawn.on('error', (err) =>
+            {
+                console.error(`FFmpeg spawn error:`, err);
+            });
+
             this.#ffmpegSpawn.stderr.on('data', data =>
             {
                 console.error(`stderr: ${data}`);
             });
+
+            this.#ffmpegSpawn.stdout.on('data', data =>
+            {
+                console.log(`stdout: ${data}`);
+            });
+
+            return
         }
+        console.log("FFmpeg already created")
     }
 
     stop()
     {
+        if (!this.#isAlive())
+            return
+
         this.#ffmpegSpawn.stdin.pause()
-        console.log("kill result:", this.#ffmpegSpawn.kill())
+        console.log("Kill ffmpeg spawn:", this.#ffmpegSpawn.kill())
+    }
+
+    restart(params)
+    {
+        this.stop()
+        this.start(params)
     }
 
     #getFfmpegArgvCPU(params)
@@ -56,7 +78,7 @@ class FfmpegStreamer
                 (+params.resolution.height))
         }
 
-        args.push('-r', '' + (+30), '-i', 'pipe:0')
+        args.push('-r', '' + (+params.fps), '-i', 'pipe:0')
 
         if (params.codec === 'h264')
             args.push('-c:v', 'libx264')
@@ -88,7 +110,7 @@ class FfmpegStreamer
                 (+params.resolution.height))
         }
 
-        args.push('-r', '' + (+30),
+        args.push('-r', '' + (+params.fps),
                   '-i', 'pipe:0')
         args.push('-g', '1')
 
@@ -154,6 +176,11 @@ class FfmpegStreamer
         args.push(params.protocol + "://" + params.url + ':' + params.port)
 
         return args
+    }
+
+    #isAlive()
+    {
+        return this.#ffmpegSpawn && !this.#ffmpegSpawn.killed
     }
 
     #ffmpegSpawn
