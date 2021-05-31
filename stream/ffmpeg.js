@@ -1,5 +1,5 @@
 const spawn = require('child_process').spawn
-const ffmpeg_path = /*"ffmpeg/bin/ffmpeg.exe"*/ 'C:/dev/tools/ffmpeg-4.4-full_build/bin/ffmpeg.exe'
+const ffmpeg_path_default = /*"ffmpeg/bin/ffmpeg.exe"*/ 'ffmpeg'
 
 // TODO: catch ffmpeg not found error
 
@@ -21,15 +21,18 @@ class FfmpegStreamer
         {
             let args = this.#getFfmpegArgvCPU(params)
             //let args = this.#getFfmpegArgvGPU_Intel(params)
-            let path = ffmpeg_path
+            let path = params.ffmpeg_path ? params.ffmpeg_path : ffmpeg_path_default
 
             console.log(path)
             console.log(args)
 
             this.#ffmpegSpawn = spawn(path, args)
 
-            this.#ffmpegSpawn.stderr.on('data', data =>
-            {
+            this.#ffmpegSpawn.stdout.on('data', (data) => {
+                console.log(`stdout: ${data}`);
+            });
+
+            this.#ffmpegSpawn.stderr.on('data', (data) => {
                 console.error(`stderr: ${data}`);
             });
         }

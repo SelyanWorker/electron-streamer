@@ -12,7 +12,7 @@ class OffscreenBrowser
 
         this.#window = new BrowserWindow(
         {
-            useContentSize: true, // doesn't work on Windows, but work ion Linux
+            useContentSize: true, // doesn't work on Windows, but work on Linux
             webPreferences:
             {
                 offscreen: true
