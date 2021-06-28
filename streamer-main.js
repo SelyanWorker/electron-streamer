@@ -43,6 +43,12 @@ let params = yargs(hideBin(process.argv))
         description: 'destination stream port',
         default: 10004
     })
+    .option('output', {
+        alias: 'o',
+        type: 'string',
+        description: 'output to file/url',
+        default: 'url'
+    })
     .argv
 
 function getResolution(strRes)
@@ -92,7 +98,8 @@ app.whenReady().then(() =>
         url: params.url,
         port: params.port,
         fps: params.fps,
-        ffmpeg_path: params.ffmpeg
+        ffmpeg_path: params.ffmpeg,
+        output: params.output
     })
 })
 

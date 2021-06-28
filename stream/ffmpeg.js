@@ -88,10 +88,22 @@ class FfmpegStreamer
             '-profile:v', 'baseline', '-preset', 'ultrafast',
             '-tune', 'zerolatency')
 
-        args.push('-f', 'rtp')
-        args.push('-sdp_file', 'video.sdp')
 
-        args.push(params.protocol + "://" + params.url + ':' + params.port)
+        if (params.output === "file")
+        {
+            args.push('-map', '0',
+                '-segment_time', '00:01:00',
+                '-f', 'segment',
+                '-reset_timestamps', '1',
+                'output%03d.mp4');
+        }
+        else
+        {
+            args.push('-f', 'rtp')
+            args.push('-sdp_file', 'video.sdp')
+            args.push(params.protocol + "://" + params.url + ':' + params.port)
+        }
+
 
         return args
     }
@@ -170,10 +182,20 @@ class FfmpegStreamer
                 '-b:a', '224k'
         )*/
 
-        args.push('-f', 'rtp')
-        args.push('-sdp_file', 'video.sdp')
-
-        args.push(params.protocol + "://" + params.url + ':' + params.port)
+        if (params.output === "file")
+        {
+            args.push('-map', '0',
+                '-segment_time', '00:01:00',
+                '-f', 'segment',
+                '-reset_timestamps', '1',
+                'output%03d.mp4');
+        }
+        else
+        {
+            args.push('-f', 'rtp')
+            args.push('-sdp_file', 'video.sdp')
+            args.push(params.protocol + "://" + params.url + ':' + params.port)
+        }
 
         return args
     }
