@@ -19,8 +19,7 @@ class FfmpegStreamer
     {
         if (!this.#isAlive())
         {
-            let args = this.#getFfmpegArgvCPU(params)
-            //let args = this.#getFfmpegArgvGPU_Intel(params)
+            let args = FfmpegStreamer.#getFfmpegArgvCPU(params)
             let path = params.ffmpeg_path ? params.ffmpeg_path : ffmpeg_path_default
 
             console.log(path)
@@ -63,12 +62,14 @@ class FfmpegStreamer
         this.start(params)
     }
 
-    #getFfmpegArgvCPU(params)
+    static #getFfmpegArgvCPU(params)
     {
         let args = ['-hide_banner']
 
         if (params.mode === 'jpeg')
+        {
             args.push('-f', 'image2pipe')
+        }
         else
         {
             args.push('-vcodec', 'rawvideo',
@@ -99,106 +100,105 @@ class FfmpegStreamer
         }
         else
         {
-            args.push('-f', 'rtp')
-            args.push('-sdp_file', 'video.sdp')
-            args.push(params.protocol + "://" + params.url + ':' + params.port)
+            args.push('-f', 'h264')
+            args.push("udp://" + params.url + ':' + params.port)
         }
 
 
         return args
     }
 
-    #getFfmpegArgvGPU_Intel(params)
-    {
-        let args = []
-        if (params.mode === 'jpeg')
-            args.push('-f', 'image2pipe')
-        else
-        {
-            args.push('-vcodec', 'rawvideo',
-                '-f', 'rawvideo',
-                '-pix_fmt', 'bgra')
-            args.push('-s:v', '' + (+params.resolution.width) + 'x' +
-                (+params.resolution.height))
-        }
-
-        args.push('-r', '' + (+params.fps),
-                  '-i', 'pipe:0')
-        args.push('-g', '1')
-
-        args.push(//'-init_hw_device', 'qsv:hw',
-                  '-b:v', '30000K',
-                  '-c:v', 'h264_qsv',
-                  '-preset:v', 'slow'
-        )
-
-        /*args.push('-pix_fmt', 'yuv420p',
-            '-profile:v', 'baseline', '-preset', 'ultrafast',
-            '-tune', 'zerolatency')*/
-
-        /*args.push('-hwaccel', 'cuvid',
-                  //'-hwaccel_output_format', 'cuda'
-        )
-
-        args.push('-vcodec', 'rawvideo',
-                  '-f', 'rawvideo',
-                  '-pix_fmt', 'bgra')
-        args.push('-s:v', '' + (+params.resolution.width) + 'x' +
-            (+params.resolution.height))
-        args.push('-r', '' + (+60),
-                  '-i', 'pipe:0',
-                  '-g', '1'
-        )
-
-        args.push('-c:v', 'h264_nvenc',
-                '-preset', 'slow',
-                '-pix_fmt', 'yuv420p',
-                '-b:v', '8M',
-                '-maxrate:v', '10M',
-                '-c:a', 'aac',
-                '-b:a', '224k'
-        )*/
-
-        /*args.push('-hwaccel', 'cuvid',
-                  //'-hwaccel_output_format', 'cuda'
-        )
-
-        args.push('-vcodec', 'rawvideo',
-                  '-f', 'rawvideo',
-                  '-pix_fmt', 'bgra')
-        args.push('-s:v', '' + (+params.resolution.width) + 'x' +
-            (+params.resolution.height))
-        args.push('-r', '' + (+60),
-                  '-i', 'pipe:0',
-                  '-g', '1'
-        )
-
-        args.push('-c:v', 'h264_nvenc',
-                '-preset', 'slow',
-                '-pix_fmt', 'yuv420p',
-                '-b:v', '8M',
-                '-maxrate:v', '10M',
-                '-c:a', 'aac',
-                '-b:a', '224k'
-        )*/
-
-        if (params.output === "file")
-        {
-            args.push('-map', '0',
-                '-segment_time', '00:01:00',
-                '-f', 'segment',
-                '-reset_timestamps', '1',
-                'output%03d.mp4');
-        }
-        else
-        {
-            args.push('-f', 'rtp')
-            args.push('-sdp_file', 'video.sdp')
-            args.push(params.protocol + "://" + params.url + ':' + params.port)
-        }
-
-        return args
-    }
+    // #getFfmpegArgvGPU_Intel(params)
+    // {
+    //     let args = []
+    //     if (params.mode === 'jpeg')
+    //         args.push('-f', 'image2pipe')
+    //     else
+    //     {
+    //         args.push('-vcodec', 'rawvideo',
+    //             '-f', 'rawvideo',
+    //             '-pix_fmt', 'bgra')
+    //         args.push('-s:v', '' + (+params.resolution.width) + 'x' +
+    //             (+params.resolution.height))
+    //     }
+    //
+    //     args.push('-r', '' + (+params.fps),
+    //               '-i', 'pipe:0')
+    //     args.push('-g', '1')
+    //
+    //     args.push(//'-init_hw_device', 'qsv:hw',
+    //               '-b:v', '30000K',
+    //               '-c:v', 'h264_qsv',
+    //               '-preset:v', 'slow'
+    //     )
+    //
+    //     /*args.push('-pix_fmt', 'yuv420p',
+    //         '-profile:v', 'baseline', '-preset', 'ultrafast',
+    //         '-tune', 'zerolatency')*/
+    //
+    //     /*args.push('-hwaccel', 'cuvid',
+    //               //'-hwaccel_output_format', 'cuda'
+    //     )
+    //
+    //     args.push('-vcodec', 'rawvideo',
+    //               '-f', 'rawvideo',
+    //               '-pix_fmt', 'bgra')
+    //     args.push('-s:v', '' + (+params.resolution.width) + 'x' +
+    //         (+params.resolution.height))
+    //     args.push('-r', '' + (+60),
+    //               '-i', 'pipe:0',
+    //               '-g', '1'
+    //     )
+    //
+    //     args.push('-c:v', 'h264_nvenc',
+    //             '-preset', 'slow',
+    //             '-pix_fmt', 'yuv420p',
+    //             '-b:v', '8M',
+    //             '-maxrate:v', '10M',
+    //             '-c:a', 'aac',
+    //             '-b:a', '224k'
+    //     )*/
+    //
+    //     /*args.push('-hwaccel', 'cuvid',
+    //               //'-hwaccel_output_format', 'cuda'
+    //     )
+    //
+    //     args.push('-vcodec', 'rawvideo',
+    //               '-f', 'rawvideo',
+    //               '-pix_fmt', 'bgra')
+    //     args.push('-s:v', '' + (+params.resolution.width) + 'x' +
+    //         (+params.resolution.height))
+    //     args.push('-r', '' + (+60),
+    //               '-i', 'pipe:0',
+    //               '-g', '1'
+    //     )
+    //
+    //     args.push('-c:v', 'h264_nvenc',
+    //             '-preset', 'slow',
+    //             '-pix_fmt', 'yuv420p',
+    //             '-b:v', '8M',
+    //             '-maxrate:v', '10M',
+    //             '-c:a', 'aac',
+    //             '-b:a', '224k'
+    //     )*/
+    //
+    //     if (params.output === "file")
+    //     {
+    //         args.push('-map', '0',
+    //             '-segment_time', '00:01:00',
+    //             '-f', 'segment',
+    //             '-reset_timestamps', '1',
+    //             'output%03d.mp4');
+    //     }
+    //     else
+    //     {
+    //         args.push('-f', 'rtp')
+    //         args.push('-sdp_file', 'video.sdp')
+    //         args.push(params.protocol + "://" + params.url + ':' + params.port)
+    //     }
+    //
+    //     return args
+    // }
 
     #isAlive()
     {

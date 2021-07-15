@@ -83,6 +83,7 @@ app.whenReady().then(() =>
     {
         ffmpeg.stop()
     })
+
     //browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-simple/simple.html")
     //browser.loadUrl("file:///" + "C:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
     //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginVideoPage()")
@@ -94,7 +95,6 @@ app.whenReady().then(() =>
         mode: 'raw',
         resolution: resolution,
         codec: 'h264',
-        protocol: 'udp',
         url: params.url,
         port: params.port,
         fps: params.fps,
