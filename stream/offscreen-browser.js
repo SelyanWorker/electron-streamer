@@ -8,7 +8,6 @@ class OffscreenBrowser
         this.#window = new BrowserWindow(
         {
             show: false,
-            kiosk: true,
             width: resolution.width,
             height: resolution.height,
             webPreferences:
