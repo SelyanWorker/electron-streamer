@@ -78,7 +78,7 @@ function playWebrtc(videoElement, webSocketUrl, videoStateCallback, enableLog)
         remoteDescr = null
         sentLocalDescr = false
 
-        createPeerConnection()
+        if (localOffer) createPeerConnection()
         createWebsocket()
     }
 
@@ -199,7 +199,8 @@ function playWebrtc(videoElement, webSocketUrl, videoStateCallback, enableLog)
             if (enableLog) {
                 console.log('ffrtc: got remote descr: ', remoteDescr)
             }
-
+            
+            if (!pc) createPeerConnection()
             var hasRemote = pc.setRemoteDescription(remoteDescr)
             if (!localOffer) {
                 hasRemote.then(function() {

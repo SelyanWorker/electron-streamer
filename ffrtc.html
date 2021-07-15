@@ -1,0 +1,17 @@
+<html>
+<body>
+<!-- 'muted' needed for 'autoplay' to work on Chrome -->
+<video id="video_1" autoplay muted></video>
+<script src="ffrtc.js"></script>
+<script>
+window.onload = function() {
+    videoStateCallback = function(state) {
+        console.log('ffrtc: VIDEO CALLBACK ', state ? 'receiving video' : 'video lost')
+    }
+    enableLog = true
+    playWebrtc(document.getElementById('video_1'), 'ws://192.168.165.124:8081', videoStateCallback, enableLog)
+}
+</script>
+</body>
+</html>
+
