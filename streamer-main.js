@@ -84,11 +84,6 @@ app.whenReady().then(() =>
         ffmpeg.stop()
     })
 
-    //browser.loadUrl("C:/dev/repos/cesium-electron-sandbox/example/cesium-simple/simple.html")
-    //browser.loadUrl("file:///" + "C:/dev/repos/cesium-electron-sandbox/example/cesium-plain/plain.html")
-    //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginVideoPage()")
-    //browser.loadUrl("http://192.168.165.124:8080/faces/_guest_dog_/geo.controller.l410f.L410fDependency.autoLoginMapPage()")
-    //browser.loadUrl("file:///" + "C:/dev/repos/cesium-plain/dist_plain/index.html")
     browser.loadUrl(params.src)
 
     ffmpeg.start({
@@ -102,17 +97,3 @@ app.whenReady().then(() =>
         output: params.output
     })
 })
-
-
-/*setTimeout(()=>
-{
-    ffmpeg.stop()
-    browser.close()
-    console.log("Test passed!!!")
-}, 1000000)*/
-
-/*setInterval(()=>
-{
-    ffmpeg.stop()
-    ffmpeg.start(ffmpeg_params)
-}, 10000)*/

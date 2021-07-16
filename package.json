@@ -19,6 +19,7 @@
     "cesium": "^1.81.0",
     "electron-packager": "^15.2.0",
     "performance-now": "^2.1.0",
+    "url-exists": "^1.0.3",
     "yargs": "^16.2.0"
   }
 }

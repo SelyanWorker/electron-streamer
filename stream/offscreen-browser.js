@@ -1,5 +1,6 @@
 const BrowserWindow = require("electron").BrowserWindow
 const performanceNow = require("performance-now")
+const urlExists = require('url-exists');
 
 class OffscreenBrowser
 {
@@ -15,61 +16,67 @@ class OffscreenBrowser
                 offscreen: true
             },
         });
-
-        this.#window.webContents.setFrameRate(fps)
     }
 
     loadUrl(url)
     {
         const stub_page = "file:///" + __dirname + '/stub-page/stub.html'
 
-        let failedLoadStubPage = ()=>
+        let loadStubPage = ()=>
         {
-            console.error("Stub page not found:", stub_page)
-        }
-
-        let pageLoaded = ()=>
-        {
-            console.log("Page loaded")
-        }
-
-        if (!url)
-        {
-            console.log("Invalid page url:", url, 'loading stub page')
-            this.#window.loadURL(stub_page).then(pageLoaded, failedLoadStubPage)
-        }
-        else
-        {
-            this.#window.loadURL(url).then(
-            ()=>
-            {
-                pageLoaded()
-                this.#window.webContents.on('unresponsive', ()=>
+            this.#window.loadURL(stub_page).then(
+                () =>
                 {
-                    console.log('Current page unresponsive, trying reload')
-                    //this.#window.webContents.reload()
-                    this.#window.webContents.reloadIgnoringCache()
+                    console.log("Stub page was loaded")
+                },
+                () =>
+                {
+                    console.log("Failed to load stub page")
                 })
-            },
-            () =>
+
+            this.#intervalObject = setInterval(()=>
             {
-                console.log('Failed to load the given page:', url, "loading stub page")
-                this.#window.loadURL(stub_page).then(pageLoaded, failedLoadStubPage)
-            })
+                console.log("Try to reload page ...")
+                urlExists(url, (err, exists)=>{
+                    if (exists)
+                    {
+                        clearInterval(this.#intervalObject)
+                        this.loadUrl(url)
+                    }
+                });
+            }, 1000)
         }
+
+        let loadGivenPage = ()=>
+        {
+            console.log("Try to load the given page: ", url)
+            this.#window.loadURL(url).then(
+                ()=>
+                {
+                    console.log("Page was loaded")
+                },
+                ()=>
+                {
+                    console.log("Failed to load page. Try to load stub page.")
+                    loadStubPage()
+                })
+        }
+
+        urlExists(url, (err, exists)=>{
+            if (exists)
+            {
+                loadGivenPage()
+            }
+            else
+            {
+                loadStubPage()
+            }
+        });
     }
 
     resize({ width, height })
     {
         this.#window.setSize(width, height)
-
-        /*if (Number.isInteger(width) && Number.isInteger(height))
-        {
-            const magicNumber = 1.25;
-            let correctWidth = Math.floor(width / magicNumber)
-            let correctHeight = Math.floor(height / magicNumber)
-            this.#window.setSize(correctWidth, correctHeight)
-        }*/
     }
 
     setOnPaintCallback(callback)
@@ -93,26 +100,26 @@ class OffscreenBrowser
                 console.log(fps_);
             }
 
-            /*console.log('Image size: ', image.getSize().width, image.getSize().height, image.getScaleFactors(),
-                        'Dirty size: ', dirty.width, dirty.height,
-                        'Content size: ', this.#window.getContentBounds().width, this.#window.getContentBounds().height)
-            console.log('Windows size: ', this.#window.getSize()[0], this.#window.getSize()[1])*/
-
             callback(image)
         });
     }
 
     setOnCloseCallback(callback)
     {
-        this.#window.on('close', callback)
+        this.#window.on('close', ()=>
+        {
+            callback()
+            this.#window.destroy()
+        })
     }
 
     close()
     {
-        this.#window.close()
+        this.#window.destroy()
     }
 
     #window
+    #intervalObject
 }
 
 module.exports = OffscreenBrowser
