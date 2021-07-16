@@ -1,4 +1,3 @@
-console.log("Hello")
 let dispalyFlag = true
 setInterval(()=>{
 	if (dispalyFlag)
@@ -6,4 +5,4 @@ setInterval(()=>{
 	else document.body.style.display = 'none'
 
 	dispalyFlag = !dispalyFlag
-}, 1000 / 24)
+}, 400)
