@@ -16,6 +16,8 @@ class OffscreenBrowser
                 offscreen: true
             },
         });
+
+        this.#window.webContents.setFrameRate(fps)
     }
 
     loadUrl(url)
